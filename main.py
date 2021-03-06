@@ -3,6 +3,14 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+## For Data visualisation 
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+import seaborn as sn
+from adspy_shared_utilities import plot_class_regions_for_classifier_subplot
+
+
+
 data = pd.read_excel("Digital_Data.xlsx")
 data.drop(["Project Ref No."], axis = 1)
 print(data.head())
@@ -14,6 +22,12 @@ def split(x, y, train = 0.8, valid = 0):
     x_train, x_valid, y_train, y_valid = train_test_split(x_trainy, y_trainy, train/(train+valid),valid/(train+valid))
 
     return x_train, x_valid, x_test, y_train, y_valid, y_test
+
+## Plotting the result of Random Classification on graph
+def plot(classifier, x_train, x_valid, x_test, y_train, y_valid, y_test):
+    plot_class_regions_for_classifier_subplot(classifier, x_train, y_train,None,
+                                                None)                           
+
 
 if (__name__ == "__main__"):
     pass
