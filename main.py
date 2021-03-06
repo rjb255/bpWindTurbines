@@ -2,10 +2,13 @@ import sklearn as sk
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-<<<<<<< HEAD
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
+
+## For Data visualisation 
+import matplotlib.pyplot as plt
+
 
 #x is the data given, y to be predicted, train, valid, and test are the fractions to be trained, validated, and tested on
 def split(x, y, train = 0.8, test = 0): 
@@ -31,43 +34,33 @@ label_encoder = LabelEncoder()
 s = (data.dtypes == 'object')
 cat_cols = list(s[s].index)
 for col in cat_cols:
-    data[col] = label_encoder.fit_transform(data[col])
-
+    data[col] = label_encoder.fit_transform(data[col].astype(str))
+# Dropped NaN values
+data = data.dropna()
 print(data.head(15))
+
+
+
+## Plotting the result of Random Classification on graph
+def plot(model, x_train, x_valid, x_test, y_train, y_valid, y_test):
+    feature_list = list(x_train.columns)
+    print(feature_list)
+    importances = model.feature_importances_
+    feature_importances = [(feature, round(importance, 2)) for feature, importance in zip(feature_list, importances)]
+    print (feature_importances)
+    # Set the style
+    plt.figure(111)
+    plt.style.use('seaborn')# list of x locations for plotting
+    x_values = list(range(len(importances)))# Make a bar chart
+    plt.bar(x_values, importances, orientation = 'vertical')# Tick labels for x axis
+    plt.xticks(x_values, feature_list, rotation=90)# Axis labels and title
+    plt.ylabel('Importance'); plt.xlabel('Variable'); plt.title('Variable Importances')
+    plt.tight_layout()
+    plt.show()                         
 
 if (__name__ == "__main__"):
     x = data.drop(columns = ['Nacelle Weights', 'Single Blade Weight (te)'])
     y = data[['Nacelle Weights', 'Single Blade Weight (te)']]
     x_train, x_valid, x_test, y_train, y_valid, y_test = split(x,y)
     model, mae = score_RandomForest(x_train, x_valid, y_train, y_valid)
-=======
-
-## For Data visualisation 
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
-import seaborn as sn
-from adspy_shared_utilities import plot_class_regions_for_classifier_subplot
-
-
-
-data = pd.read_excel("Digital_Data.xlsx")
-data.drop(["Project Ref No."], axis = 1)
-print(data.head())
-
-#x is the data given, y to be predicted, train, valid, and test are the fractions to be trained, validated, and tested on
-def split(x, y, train = 0.8, valid = 0): 
-    test = 1 - train - valid
-    x_trainy, x_test, y_trainy, y_test = train_test_split(x, y, (train+valid), test)
-    x_train, x_valid, y_train, y_valid = train_test_split(x_trainy, y_trainy, train/(train+valid),valid/(train+valid))
-
-    return x_train, x_valid, x_test, y_train, y_valid, y_test
-
-## Plotting the result of Random Classification on graph
-def plot(classifier, x_train, x_valid, x_test, y_train, y_valid, y_test):
-    plot_class_regions_for_classifier_subplot(classifier, x_train, y_train,None,
-                                                None)                           
-
-
-if (__name__ == "__main__"):
-    pass
->>>>>>> d3d10491527c5b1588ea64e4a9fbf6e23d9b9136
+    plot(model, x_train, x_valid, x_test, y_train, y_valid, y_test)
