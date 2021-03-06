@@ -3,4 +3,11 @@ import numpy as np
 import pandas as pd
 
 data = pd.read_excel("Digital_Data.xlsx")
+
 print(data.head())
+
+
+
+
+if (__name__ == "__main__"):
+    pass
