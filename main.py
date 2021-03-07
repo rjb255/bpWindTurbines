@@ -6,6 +6,12 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
+from sklearn import linear_model
+
+## For Data visualisation 
+import matplotlib.pyplot as plt
+
+
 #x is the data given, y to be predicted, train, valid, and test are the fractions to be trained, validated, and tested on
 def split(x, y, train = 0.8, test = 0): 
     valid = 1 - train - test
@@ -30,15 +36,45 @@ label_encoder = LabelEncoder()
 s = (data.dtypes == 'object')
 cat_cols = list(s[s].index)
 for col in cat_cols:
-    data[col] = label_encoder.fit_transform(data[col])
-
+    data[col] = label_encoder.fit_transform(data[col].astype(str))
+# Dropped NaN values
+data = data.dropna()
 print(data.head(15))
+
+## Keep getting different variables with the highest importance??
+def LinReg (X, y, function):
+    feature_list, importances, feature_importances = function
+    sorted_by_second = sorted(feature_importances, key=lambda tup: tup[1], reverse=True)
+    ## Edit ind_var to only use indepent variables 
+    ind_var = ['Operator', 'Water depth', 'a1', 'Turbine rating (kW)', 'Blade length (m)', 'Tower height (m)', 'Built duration', 'Type', 'Metocean', 'Region']
+    X = X[ind_var]
+    regr = linear_model.LinearRegression()
+    regr.fit(X,y)
+    pass
+
+def feature_importance(model, x_train):
+    feature_list = list(x_train.columns)
+    importances = model.feature_importances_
+    feature_importances = [(feature, round(importance, 2)) for feature, importance in zip(feature_list, importances)]
+    return feature_list, importances, feature_importances
+
+## Plotting the result of feature importance of RandomForest on graph
+def plot(function):
+    feature_list, importances, feature_importances = function
+    plt.style.use('seaborn')
+    x_values = list(range(len(importances)))
+    plt.bar(x_values, importances, orientation = 'vertical')
+    plt.xticks(x_values, feature_list, rotation=90)
+    plt.ylabel('Importance'); plt.xlabel('Variable'); plt.title('Variable Importances')
+    plt.tight_layout()
+    plt.show()                         
 
 if (__name__ == "__main__"):
     x = data.drop(columns = ['Nacelle Weights', 'Single Blade Weight (te)'])
     y = data[['Nacelle Weights', 'Single Blade Weight (te)']]
     x_train, x_valid, x_test, y_train, y_valid, y_test = split(x,y)
     model, mae = score_RandomForest(x_train, x_valid, y_train, y_valid)
+<<<<<<< HEAD
 
 ## For Data visualisation 
 import matplotlib.pyplot as plt
@@ -68,3 +104,11 @@ def plot(classifier, x_train, x_valid, x_test, y_train, y_valid, y_test):
 
 if (__name__ == "__main__"):
     pass
+=======
+    
+    ## Identify the features of importance from Random Forest
+    feature_importance = feature_importance(model, x_train)
+    plot(feature_importance)
+    ## Multivariable Linear Regression
+    LinReg(x, y, feature_importance)
+>>>>>>> b87125ca370f94cc49becd5e1a0814f4c495a33e
