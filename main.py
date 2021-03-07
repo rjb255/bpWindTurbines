@@ -74,7 +74,6 @@ if (__name__ == "__main__"):
     y = data[['Nacelle Weights', 'Single Blade Weight (te)']]
     x_train, x_valid, x_test, y_train, y_valid, y_test = split(x,y)
     model, mae = score_RandomForest(x_train, x_valid, y_train, y_valid)
-<<<<<<< HEAD
 
 ## For Data visualisation 
 import matplotlib.pyplot as plt
@@ -104,11 +103,9 @@ def plot(classifier, x_train, x_valid, x_test, y_train, y_valid, y_test):
 
 if (__name__ == "__main__"):
     pass
-=======
     
     ## Identify the features of importance from Random Forest
     feature_importance = feature_importance(model, x_train)
     plot(feature_importance)
     ## Multivariable Linear Regression
     LinReg(x, y, feature_importance)
->>>>>>> b87125ca370f94cc49becd5e1a0814f4c495a33e
