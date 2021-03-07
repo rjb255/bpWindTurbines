@@ -2,7 +2,6 @@ import sklearn as sk
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-<<<<<<< HEAD
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
@@ -40,7 +39,6 @@ if (__name__ == "__main__"):
     y = data[['Nacelle Weights', 'Single Blade Weight (te)']]
     x_train, x_valid, x_test, y_train, y_valid, y_test = split(x,y)
     model, mae = score_RandomForest(x_train, x_valid, y_train, y_valid)
-=======
 
 ## For Data visualisation 
 import matplotlib.pyplot as plt
@@ -70,4 +68,3 @@ def plot(classifier, x_train, x_valid, x_test, y_train, y_valid, y_test):
 
 if (__name__ == "__main__"):
     pass
->>>>>>> d3d10491527c5b1588ea64e4a9fbf6e23d9b9136
